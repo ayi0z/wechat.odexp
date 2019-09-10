@@ -1,12 +1,12 @@
-import wxhttp from './wxhttp'
+// import vhttp from '../vhttp'
 import util from '../util'
 
-const { ctmd } = util
+const { ctmd, vhttp } = util
 
 const openid = async (token, next = '') => {
   console.log('get openid from wechat api')
   let _ctmd
-  await wxhttp.get(`https://api.weixin.qq.com/cgi-bin/user/get?access_token=${token}&next_openid=${next}`)
+  await vhttp.get(`https://api.weixin.qq.com/cgi-bin/user/get?access_token=${token}&next_openid=${next}`)
     .then(res => {
       if (res.data.total) {
         _ctmd = ctmd.success(res.data)

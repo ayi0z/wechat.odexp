@@ -20,9 +20,9 @@ export default (_db, notice) => {
         })
       })
     },
-    load (ft = {}) {
+    load (ft = {}, pj = {}) {
       return new Promise((resolve, reject) => {
-        _db.find(ft, (err, docs) => {
+        _db.find(ft, pj, (err, docs) => {
           if (err) {
             reject(new Error(err))
           } else {
@@ -31,13 +31,35 @@ export default (_db, notice) => {
         })
       })
     },
+    query (ft = {}, skip = 1, limit = 1, pj = {}, sort = {}) {
+      return new Promise((resolve, reject) => {
+        _db.find(ft, pj).sort(sort).skip(skip).limit(limit).exec((err, docs) => {
+          if (err) {
+            reject(new Error(err))
+          } else {
+            resolve(ctmd.success(docs))
+          }
+        })
+      })
+    },
+    queryOne (ft = {}, pj = {}) {
+      return new Promise((resolve, reject) => {
+        _db.findOne(ft, pj, (err, doc) => {
+          if (err) {
+            reject(new Error(err))
+          } else {
+            resolve(ctmd.success(doc))
+          }
+        })
+      })
+    },
     del2 (id) {
       return this.del({ _id: id })
     },
-    del (ft) {
+    del (ft, opt = { multi: true }) {
       return new Promise((resolve, reject) => {
         if (!ft) reject(new Error('undifined ft'))
-        _db.remove(ft, { multi: true }, function (err, numRemoved) {
+        _db.remove(ft, opt, function (err, numRemoved) {
           if (err) {
             reject(new Error(err))
           } else {
@@ -49,11 +71,11 @@ export default (_db, notice) => {
     update2 (id, st) {
       return this.update({ _id: id }, st)
     },
-    update (ft, st) {
+    update (ft, st, opt = { multi: true }) {
       return new Promise((resolve, reject) => {
         if (!ft) reject(new Error('undifined ft'))
         if (!st) reject(new Error('undifined st'))
-        _db.update(ft, st, { multi: true }, function (err, numReplaced) {
+        _db.update(ft, st, opt, function (err, numReplaced) {
           if (err) {
             reject(new Error(err))
           } else {

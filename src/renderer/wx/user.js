@@ -1,12 +1,12 @@
-import wxhttp from './wxhttp'
+// import vhttp from '../vhttp'
 import util from '../util'
 
-const { ctmd } = util
+const { ctmd, vhttp } = util
 
 const user = async (token, openid, lang = 'zh_CN') => {
   console.log('get single userinfo from wechat api')
   let _ctmd
-  await wxhttp.get(`https://api.weixin.qq.com/cgi-bin/user/info?access_token=${token}&openid=${openid}&lang=${lang}`)
+  await vhttp.get(`https://api.weixin.qq.com/cgi-bin/user/info?access_token=${token}&openid=${openid}&lang=${lang}`)
     .then(res => {
       if (res.data.total) {
         _ctmd = ctmd.success(res.data)
@@ -24,10 +24,8 @@ const users = async (token, openids, lang = 'zh_CN') => {
   console.log('get many users info from wechat api')
   let _ctmd
   const openidlist = { user_list: openids.map(c => ({ openid: c, lang })) }
-  console.log(openidlist)
-  await wxhttp.post(`https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=${token}`, openidlist)
+  await vhttp.post(`https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=${token}`, openidlist)
     .then(res => {
-      console.log(res)
       if (res.data.user_info_list) {
         _ctmd = ctmd.success(res.data)
       } else {

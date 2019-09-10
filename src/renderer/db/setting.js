@@ -1,6 +1,15 @@
 import db from './db'
 import dbm from './dbm'
 
+/**
+ * {
+ *  title: string,
+ *  appid: string,
+ *  appsecret: string,
+  * expdir: string,
+  * status: bool
+ * }
+ */
 export default {
   ...dbm(db.setting, '配置信息加载失败'),
   check (f, v) {

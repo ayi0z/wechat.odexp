@@ -12,6 +12,8 @@ import wx from './wx'
 import util from './util'
 
 console.log(wx)
+console.log(util)
+console.log(db)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -21,7 +23,11 @@ Vue.use(ElementUI)
 
 Vue.prototype.$db = db
 Vue.prototype.$wx = wx
-Vue.prototype.$noti = util.notify
+
+const { notify, dic } = util
+
+Vue.prototype.$noti = notify
+Vue.prototype.$dic = dic
 
 /* eslint-disable no-new */
 new Vue({

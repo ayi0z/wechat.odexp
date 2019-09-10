@@ -19,7 +19,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "export_openid",
+    "productName": "wechat_datacube",
     "appId": "com.ayioz.odexp",
     "directories": {
       "output": "build"
