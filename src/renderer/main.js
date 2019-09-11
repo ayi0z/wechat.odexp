@@ -24,10 +24,11 @@ Vue.use(ElementUI)
 Vue.prototype.$db = db
 Vue.prototype.$wx = wx
 
-const { notify, dic } = util
+const { notify, dic, func } = util
 
 Vue.prototype.$noti = notify
 Vue.prototype.$dic = dic
+Vue.prototype.$func = func
 
 /* eslint-disable no-new */
 new Vue({

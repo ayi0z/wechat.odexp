@@ -11,7 +11,7 @@ import dbm from './dbm'
  * }
  */
 export default {
-  ...dbm(db.setting, '配置信息加载失败'),
+  ...dbm(db.setting, '配置信息数据库加载失败'),
   check (f, v) {
     var jsonobj = {}
     if (f) {

@@ -1,12 +1,13 @@
 import Vue from 'vue'
 
 // 接受 {t,m}
-const n = tm => {
+const n = (tm, duration = 3000) => {
   Vue.prototype.$notify({
     title: tm.t,
     message: tm.m,
     type: tm.t,
-    position: 'bottom-left'
+    position: 'bottom-left',
+    duration
   })
 }
 

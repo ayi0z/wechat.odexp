@@ -13,5 +13,5 @@ import dbm from './dbm'
  * }
  */
 export default {
-  ...dbm(db.runtime, '加载系统运行状态失败')
+  ...dbm(db.runtime, '系统运行状态数据库加载失败')
 }

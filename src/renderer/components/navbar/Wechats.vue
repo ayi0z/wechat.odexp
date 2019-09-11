@@ -2,7 +2,10 @@
     <div>
         <el-tabs @tab-click="doSwitchTab" class="navbar-wechats">
             <el-tab-pane v-for="wx in wechats" :key="wx._id" :label="wx.title" :name="wx.appid">
-              <span slot="label"><i class="el-icon-chat-dot-round"></i> {{wx.title}}</span>
+                <span slot="label">
+                    <i class="el-icon-chat-dot-round"></i>
+                    {{wx.title}}
+                </span>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -28,10 +31,10 @@
       methods: {
         doSwitchTab (tab) {
           if (this.activeTab === tab) return
-
           this.activeTab = tab
           this.$wx.token(tab.name).then(res => {
-            if (res.c === 0) this.$emit('tabclick', { ...res.d, appid: tab.name })
+            const wc = this.$store.getters.getWechatByAppId(tab.name)
+            if (res.c === 0) this.$emit('tabclick', { ...res.d, appid: tab.name, ...wc })
             this.$noti.err(res)
           })
         },

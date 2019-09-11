@@ -1,8 +1,7 @@
 import store from '../store'
-// import vhttp from '../vhttp'
 import util from '../util'
 
-const { ctmd, vhttp } = util
+const { ctmd, svrhttp } = util
 
 const expiresIn = 7000
 const token = async appid => {
@@ -29,8 +28,9 @@ const token = async appid => {
 // get token from store
 async function getTokenFrStore (appid, appsecret) {
   console.log('update access token from wechat api')
+  console.log(appid, appsecret)
   let _ctmd
-  await vhttp.get(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${appsecret}`)
+  await svrhttp.get(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${appsecret}`)
     .then(res => {
       if (res.status === 200) {
         if (res.data.access_token) {

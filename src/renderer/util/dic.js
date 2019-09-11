@@ -15,6 +15,18 @@ const SUBSCRIBE_SCENE = {
   ADD_SCENE_OTHERS: '其他'
 }
 
+const USER_SOURCE = {
+  0: '其他合计',
+  1: '公众号搜索',
+  17: '名片分享',
+  30: '扫描二维码',
+  43: '图文页右上角菜单',
+  51: '支付后关注',
+  57: '图文页内公众号名称',
+  75: '公众号文章广告',
+  78: '朋友圈广告'
+}
+
 const RUNTIME_KEY = {
   DASH_OPENID_USERINFO: 'dash_openid_userinfo'
 }
@@ -22,5 +34,6 @@ const RUNTIME_KEY = {
 export default {
   SEX,
   SUBSCRIBE_SCENE,
+  USER_SOURCE,
   RUNTIME_KEY
 }

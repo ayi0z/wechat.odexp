@@ -30,7 +30,6 @@
       },
       mounted () {
         this.$http.get('http://ip-api.com/json/?lang=zh-CN').then(res => {
-          console.log(res.data)
           this.tds.push({
             title: 'Local IP',
             divider: true,

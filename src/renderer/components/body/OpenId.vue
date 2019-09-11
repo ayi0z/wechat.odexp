@@ -7,10 +7,10 @@
                         <el-progress type="circle" :percentage="dash_openid_percent" :width="60"></el-progress>
                     </div>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="8">
                     <tit-desc
                         kalign="left"
-                        :tw="8"
+                        :tw="10"
                         :tds="[{divider:true, infos:[{k:'OpenID 同步时间:', v:new Date(dash_openid.time).toLocaleString()},{k:'已同步的 OpenID:', v: `${dash_openid.count}/${dash_openid.total}`}]}]"
                     ></tit-desc>
                 </el-col>
@@ -19,12 +19,32 @@
                         <el-progress type="circle" :percentage="dash_userinfo_percent" :width="60"></el-progress>
                     </div>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="9">
                     <tit-desc
                         kalign="left"
-                        :tw="8"
+                        :tw="10"
                         :tds="[{divider:true, infos:[{k:'UserInfo 同步时间:', v:new Date(dash_userinfo.time).toLocaleString()},{k:'已同步的 UserInfo:', v: `${dash_userinfo.count}/${dash_openid.total}`}]}]"
                     ></tit-desc>
+                </el-col>
+                <el-col :span="3">
+                    <div style="margin-bottom:3px;">
+                        <el-button
+                            type="primary"
+                            size="mini"
+                            icon="el-icon-download"
+                            style="width:100%"
+                            @click="onExportOpenID"
+                        >OpenID</el-button>
+                    </div>
+                    <div>
+                        <el-button
+                            type="primary"
+                            size="mini"
+                            icon="el-icon-download"
+                            style="width:100%"
+                            @click="onExportUserInfo"
+                        >UserInfo</el-button>
+                    </div>
                 </el-col>
             </el-row>
         </el-header>
@@ -34,7 +54,6 @@
                 :data="datas"
                 :stripe="true"
                 lazy
-                border
                 style="width: 100%; height:100%;"
                 size="mini"
             >
@@ -53,14 +72,19 @@
                             <el-form-item label="语言">
                                 <span>{{ props.row.language }}</span>
                             </el-form-item>
-                            <el-form-item label="标签">
-                                <span>{{ props.row.tagid_list }}</span>
+                            <el-form-item label="Union ID">
+                                <span>{{ props.row.unionid }}</span>
                             </el-form-item>
                             <el-form-item label="备注">
                                 <span>{{ props.row.remark }}</span>
                             </el-form-item>
-                            <el-form-item label="Union ID">
-                                <span>{{ props.row.unionid }}</span>
+                            <el-form-item label="标签">
+                                <span>
+                                    {{ props.row.tagid_list.map(t => {
+                                    const tag = tags.find(ta => ta.id === t)
+                                    return (tag && tag.name) || ''
+                                    }).join(',') }}
+                                </span>
                             </el-form-item>
                         </el-form>
                     </template>
@@ -115,13 +139,15 @@
           dash_userinfo: {
             time: Date.parse(new Date()),
             count: 0
-          }
+          },
+          tags: []
         }
       },
       watch: {
         wechat () {
           this.onLoadRunTime()
           this.onLoadLocalUserInfo()
+          this.onLoadLocalTag()
         }
       },
       computed: {
@@ -146,12 +172,12 @@
           return this.$dic.SEX(sex)
         },
         oSUBSCRIBE_SCENE (k) {
-          return this.$dic.SUBSCRIBE_SCENE['ADD_SCENE_PROFILE_LINK']
+          return this.$dic.SUBSCRIBE_SCENE[k]
         },
         onLoadRunTime () {
+          if (this.isnoappid) { return }
           this.$db.runtime.queryOne({ key: this.$dic.RUNTIME_KEY.DASH_OPENID_USERINFO, appid: this.wechat.appid })
             .then(res => {
-              console.log(res)
               if (res.c === 0 && res.d) {
                 this.dash_openid.time = res.d.openid_synctime
                 this.dash_openid.total = res.d.openid_total
@@ -168,12 +194,20 @@
               this.$noti.err(res)
             })
         },
+        onLoadLocalTag () {
+          if (this.isnoappid) { return }
+          this.$db.tag.load({ appid: this.wechat.appid }).then(res => {
+            if (res.c === 0 && res.d && res.d.length > 0) {
+              this.tags = res.d[0].tags
+            }
+            this.$noti.err(res)
+          })
+        },
         onDownLoadOpenId () {
           if (this.isnotokenandappid) { return }
           this.oDownLoadOpenIDFrWechat()
         },
         oDownLoadOpenIDFrWechat (nextopenid = '') {
-          console.log('todo: 从微信api接口拉取数据')
           if (nextopenid === '') {
             this.dash_openid.total = 0
             this.dash_openid.count = 0
@@ -181,7 +215,6 @@
           }
           this.$wx.openid(this.wechat.token, nextopenid)
             .then(res => {
-              console.log(res)
               if (res.c === 0 && res.d) {
                 this.dash_openid.time = Date.parse(new Date())
                 this.dash_openid.total = res.d.total
@@ -209,7 +242,6 @@
         onLoadLocalUserInfo () {
           if (this.isnoappid) { return }
           this.$db.user.load({ appid: this.wechat.appid }).then(res => {
-            console.log(res)
             if (res.c === 0 && res.d) {
               this.datas = res.d
             }
@@ -229,7 +261,6 @@
             .then(res => {
               if (res.c === 0 && res.d && res.d.length) {
                 this.$wx.users(this.wechat.token, res.d.map(o => (o.openid))).then(ures => {
-                  console.log(ures)
                   if (ures.c === 0 && ures.d) {
                     this.dash_userinfo.time = Date.parse(new Date())
                     this.dash_userinfo.count += ures.d.user_info_list.length
@@ -255,6 +286,74 @@
               }
               this.$noti.err(res)
             })
+        },
+        onExportOpenID () {
+          if (this.isnoappid) { return }
+          this.$db.openid.load({ appid: this.wechat.appid }).then(res => {
+            if (res.c === 0 && res.d && res.d.length > 0) {
+              const fp = require('path').join(this.wechat.expdir, `export_openid_${this.wechat.title}_${Date.parse(new Date()) / 1000}.txt`)
+              require('../../export').default.openid(res.d.map(c => (c.openid)), fp)
+                .then(res => {
+                  this.$notify({
+                    title: 'OpenID 已导出, 点击此处可打开',
+                    message: res.d,
+                    type: 'success',
+                    position: 'bottom-left',
+                    duration: 10000,
+                    onClick: () => this.$electron.shell.openExternal(res.d)
+                  })
+                })
+            }
+            this.$noti.err(res)
+          })
+        },
+        onExportUserInfo () {
+          if (this.isnoappid) return
+          this.$db.user.load({ appid: this.wechat.appid }, { appid: 0, groupid: 0, qr_scene: 0, qr_scene_str: 0, _id: 0 }).then(res => {
+            if (res.c === 0 && res.d && res.d.length > 0) {
+              const title = ['openid', 'nickname', 'gender', 'area', 'subscribe scene', 'subscribe time', 'language', 'unionid', 'remark', 'tag', 'avater']
+              let usrs = res.d.map(u => {
+                let usr = []
+                for (let key of title) {
+                  if (key === 'gender') {
+                    usr.push(this.oSex(u.sex))
+                  } else if (key === 'area') {
+                    usr.push(`${u.country} ${u.province} ${u.city}`)
+                  } else if (key === 'subscribe scene') {
+                    usr.push(this.oSUBSCRIBE_SCENE(u.subscribe_scene))
+                  } else if (key === 'subscribe time') {
+                    usr.push(new Date(u.subscribe_time * 1000).toLocaleString())
+                  } else if (key === 'tag') {
+                    usr.push(u.tagid_list.map(t => {
+                      const tag = this.tags.find(ta => ta.id === t)
+                      return (tag && tag.name) || ''
+                    }).join(','))
+                  } else if (key === 'avater') {
+                    usr.push(u.headimgurl)
+                  } else {
+                    usr.push(u[key])
+                  }
+                }
+                return usr
+              })
+
+              let data = [{ name: this.wechat.title, data: [title].concat(usrs) }]
+
+              const fp = require('path').join(this.wechat.expdir, `export_userinfo_${this.wechat.title}_${Date.parse(new Date()) / 1000}.xlsx`)
+              require('../../export').default.userinfo(data, fp)
+                .then(res => {
+                  this.$notify({
+                    title: 'UserInfo 已导出, 点击此处可打开',
+                    message: res.d,
+                    type: 'success',
+                    position: 'bottom-left',
+                    duration: 10000,
+                    onClick: () => this.$electron.shell.openExternal(res.d)
+                  })
+                })
+            }
+            this.$noti.err(res)
+          })
         }
       }
     }
@@ -313,7 +412,7 @@
     }
     .openid-container .pressbtn:active::before,
     .openid-container .pressbtn:hover::before {
-        background-color: rgba(32, 37, 41, 0.42);
+        background-color: rgba(35, 140, 47, 0.39);
         content: '点此同步';
         position: absolute;
         width: 60px;
@@ -326,7 +425,7 @@
         box-shadow: 1px 1px 1px #6d6d6d;
     }
     .openid-container .pressbtn:active::before {
-        box-shadow: 0px 0px 2px #000000;
+        box-shadow: 0px 0px 2px #1d5d1f;
     }
     .openid-container .pressbtn-err .el-progress__text,
     .openid-container .pressbtn:hover .el-progress__text,

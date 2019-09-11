@@ -2,13 +2,14 @@
     <el-container style="height: 100vh; border: 1px solid #eee">
         <el-aside width="140px" style="background-color: rgb(238, 241, 246)">
             <el-menu
-                default-active="0"
+                :default-active="mainView"
                 :default-openeds="['1', '2']"
+                @select="onMenuSelect"
                 background-color="#545c64"
                 text-color="#fff"
                 active-text-color="#ffd04b"
             >
-                <el-menu-item index="0" @click="switchPage('welcome')">
+                <el-menu-item index="welcome">
                     <template slot="title">
                         <i class="el-icon-star-off"></i> Welcome
                     </template>
@@ -17,33 +18,21 @@
                     <template slot="title">
                         <i class="el-icon-user"></i>OpenID
                     </template>
-                    <el-menu-item
-                        index="1-1"
-                        @click="switchPage('userinfo')"
-                        style="padding-left:45px;"
-                    >用户信息</el-menu-item>
-                    <el-menu-item
-                        index="1-2"
-                        @click="switchPage('usersummary')"
-                        style="padding-left:45px;"
-                    >粉丝数据</el-menu-item>
+                    <el-menu-item index="userinfo" style="padding-left:45px;">用户信息</el-menu-item>
+                    <el-menu-item index="usersummary" style="padding-left:45px;">粉丝数据</el-menu-item>
                 </el-submenu>
                 <el-submenu index="2">
                     <template slot="title">
                         <i class="el-icon-data-line"></i>图文数据
                     </template>
-                    <el-menu-item
-                        index="2-1"
-                        @click="switchPage('datacube')"
-                        style="padding-left:45px;"
-                    >图文数据</el-menu-item>
+                    <el-menu-item index="datacube" style="padding-left:45px;">图文数据</el-menu-item>
                 </el-submenu>
-                <el-menu-item index="3" @click="switchPage('setting')">
+                <el-menu-item index="setting">
                     <template slot="title">
                         <i class="el-icon-setting"></i> 设置
                     </template>
                 </el-menu-item>
-                <el-menu-item index="4" @click="switchPage('about')">
+                <el-menu-item index="about">
                     <template slot="title">
                         <i class="el-icon-info"></i> 关于
                     </template>
@@ -75,34 +64,12 @@
       },
       data () {
         return {
-          mainView: 'userinfo'
+          mainView: 'usersummary'
         }
       },
-      mounted () {
-        console.log('lp mounted')
-        // this.$dbsetting.wc_check()
-        //   .then(res => {
-        //     if (res.d > 0) {
-        //       this.mainView = 'UserInfo'
-        //       this.$dbsetting.wc_load().then(res => {
-        //         if (res.c === 0) {
-        //           this.$store.dispatch('refresh_wechats', res.d)
-        //         }
-        //       }).catch(err => {
-        //         console.error(err)
-        //         this._doNotify({ t: 'error', m: '微信公众号加载失败' })
-        //       })
-        //     } else {
-        //       this.mainView = 'setting'
-        //     }
-        //   }).catch(err => {
-        //     console.log(err)
-        //     this._doNotify({ t: 'error', m: '微信公众号加载失败' })
-        //   })
-      },
       methods: {
-        switchPage (v) {
-          this.mainView = v
+        onMenuSelect (index, path) {
+          this.mainView = index
         }
       }
     }

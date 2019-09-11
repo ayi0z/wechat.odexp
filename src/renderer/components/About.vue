@@ -36,11 +36,11 @@
 
 <script>
     import TitDesc from './body/TitDesc'
+    import os from 'os'
     export default {
       name: 'about',
       components: { TitDesc },
       data () {
-        const os = require('os')
         return {
           appname: 'Wechat OpenID & Datacube',
           author: process.env.npm_package_author_name,
