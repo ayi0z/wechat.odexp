@@ -1,7 +1,7 @@
 # odexp
 
 > export openid and datacube from WeChat
-> 导出微信公众号用户和图文数据信息
+> 微信公众号粉丝、图文数据（浏览、下载）
 
 #### Build Setup
 

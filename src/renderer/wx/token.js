@@ -28,7 +28,6 @@ const token = async appid => {
 // get token from store
 async function getTokenFrStore (appid, appsecret) {
   console.log('update access token from wechat api')
-  console.log(appid, appsecret)
   let _ctmd
   await svrhttp.get(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${appsecret}`)
     .then(res => {
