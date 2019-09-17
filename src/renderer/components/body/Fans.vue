@@ -31,13 +31,6 @@
                             style="margin-left:auto"
                             @click="onDownLoadFansFrWechat"
                         >同步微信数据(最近1周)</el-button>
-                        <el-button
-                            type="primary"
-                            size="mini"
-                            icon="el-icon-download"
-                            style="margin-left:auto"
-                            @click="onExport"
-                        >导出 xlsx</el-button>
                     </div>
                 </el-col>
             </el-row>
@@ -106,59 +99,59 @@
         return {
           USER_SOURCE: this.$dic.USER_SOURCE,
           datas: [
-            {
-              ref_date: '2014-12-07',
-              cumulate_user: 65300,
-              data: [{
-                ref_date: '2014-12-07',
-                user_source: 57,
-                new_user: 60,
-                cancel_user: 123
-              }, {
-                ref_date: '2014-12-07',
-                user_source: 30,
-                new_user: 8,
-                cancel_user: 3
-              }]
-            }, {
-              ref_date: '2014-12-08',
-              cumulate_user: 12312,
-              data: [{
-                ref_date: '2014-12-08',
-                user_source: 51,
-                new_user: 32,
-                cancel_user: 12
-              }, {
-                ref_date: '2014-12-08',
-                user_source: 43,
-                new_user: 6,
-                cancel_user: 9
-              }, {
-                ref_date: '2014-12-08',
-                user_source: 57,
-                new_user: 54,
-                cancel_user: 15
-              }]
-            }, {
-              ref_date: '2014-12-01',
-              cumulate_user: 12312,
-              data: [{
-                ref_date: '2014-12-01',
-                user_source: 51,
-                new_user: 32,
-                cancel_user: 12
-              }, {
-                ref_date: '2014-12-01',
-                user_source: 43,
-                new_user: 6,
-                cancel_user: 9
-              }, {
-                ref_date: '2014-12-01',
-                user_source: 57,
-                new_user: 54,
-                cancel_user: 15
-              }]
-            }
+            // {
+            //   ref_date: '2014-12-07',
+            //   cumulate_user: 65300,
+            //   data: [{
+            //     ref_date: '2014-12-07',
+            //     user_source: 57,
+            //     new_user: 60,
+            //     cancel_user: 123
+            //   }, {
+            //     ref_date: '2014-12-07',
+            //     user_source: 30,
+            //     new_user: 8,
+            //     cancel_user: 3
+            //   }]
+            // }, {
+            //   ref_date: '2014-12-08',
+            //   cumulate_user: 12312,
+            //   data: [{
+            //     ref_date: '2014-12-08',
+            //     user_source: 51,
+            //     new_user: 32,
+            //     cancel_user: 12
+            //   }, {
+            //     ref_date: '2014-12-08',
+            //     user_source: 43,
+            //     new_user: 6,
+            //     cancel_user: 9
+            //   }, {
+            //     ref_date: '2014-12-08',
+            //     user_source: 57,
+            //     new_user: 54,
+            //     cancel_user: 15
+            //   }]
+            // }, {
+            //   ref_date: '2014-12-01',
+            //   cumulate_user: 12312,
+            //   data: [{
+            //     ref_date: '2014-12-01',
+            //     user_source: 51,
+            //     new_user: 32,
+            //     cancel_user: 12
+            //   }, {
+            //     ref_date: '2014-12-01',
+            //     user_source: 43,
+            //     new_user: 6,
+            //     cancel_user: 9
+            //   }, {
+            //     ref_date: '2014-12-01',
+            //     user_source: 57,
+            //     new_user: 54,
+            //     cancel_user: 15
+            //   }]
+            // }
           ],
           daterange: ['2019-10-07', '2019-10-24']
         }
@@ -274,13 +267,14 @@
               }
               this.$noti.err(res)
             })
-        },
-        onExport () {
-          console.log('export fans')
-          require('../../export').default.fans([1, 2, 3], require('path').join(__static, 'export_fans_tpl.xlsx'))
-            .then(res => console.log(res))
-          // console.log(require('path').join(__static, 'export_article_tpl.xlsx'))
         }
+        // ,
+        // onExport () {
+        //   console.log('export fans')
+        //   require('../../export').default.fans([1, 2, 3], require('path').join(__static, 'export_fans_tpl.xlsx'))
+        //     .then(res => console.log(res))
+        //   // console.log(require('path').join(__static, 'export_article_tpl.xlsx'))
+        // }
       }
     }
 </script>
